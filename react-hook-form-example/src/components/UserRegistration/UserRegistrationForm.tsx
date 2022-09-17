@@ -3,7 +3,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { Alert, Button, MenuItem, Stack, TextField } from "@mui/material";
 import { Typography } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { CountriesOfWork, MaritalStatusType } from "../../types";
 import MaritalStatus from "./MaritalStatus";
 import {
@@ -27,7 +27,6 @@ export interface IUserInfo {
 
 const UserRegistrationForm: FunctionComponent<{}> = () => {
   const [schema, setSchema] = useState<any>(baseSchema);
-  const [formValues, setFromValues] = useState<any>(null);
   const [fromSubmitted, setFormSubmitted] = useState(false);
 
   const [holidayAllowanceRule, setHolidayAllowanceRule] = useState<{
@@ -42,31 +41,31 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
     watch,
     reset,
     control,
-
     formState: { errors },
   } = useForm<IUserInfo>({
     mode: "all",
     resolver: yupResolver(schema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      dateOfBirth: null,
+      allowanceDays: 0,
+      countryOfWork: null,
+      maritalStatus: null,
+      socialInsuranceNumber: 0,
+      numberOfChildren: 0,
+      workingHours: 0,
+    },
   });
 
-  // Used to watch changes in a from and set right holliday allowance limits.
+  const watchCountryOfWork = watch("countryOfWork", undefined);
+
   useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      console.log(value);
-      setFromValues(value);
-      if (name === "countryOfWork") {
-        setHolidayAllowanceRule({
-          ...countryAllowanceRules[
-            value.countryOfWork as "Spain" | "Ghana" | "Brazil"
-          ],
-        });
-        setSchema(
-          validationSchema[value.countryOfWork as "Spain" | "Ghana" | "Brazil"]
-        );
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [setValue, watch]);
+    if (watchCountryOfWork) {
+      setSchema(validationSchema[watchCountryOfWork]);
+      setHolidayAllowanceRule(countryAllowanceRules[watchCountryOfWork]);
+    }
+  }, [watchCountryOfWork]);
 
   // If rule for allowance changed, we adjust from values here.
   useEffect(() => {
@@ -150,20 +149,27 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
           />
         </div>
 
-        <TextField
-          data-testid="country-of-origin-select"
-          label="Country of work"
-          select
-          {...register("countryOfWork")}
-          error={!!errors["countryOfWork"]?.message}
-          helperText={errors["countryOfWork"]?.message}
-        >
-          <MenuItem value={"Spain"}>Spain</MenuItem>
-          <MenuItem value={"Ghana"}>Ghana</MenuItem>
-          <MenuItem value={"Brazil"}>Brazil</MenuItem>
-        </TextField>
+        <Controller
+          name="countryOfWork"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <TextField
+              data-testid="country-of-origin-select"
+              label="Country of work"
+              select
+              {...field}
+              inputRef={ref}
+              error={!!errors["countryOfWork"]?.message}
+              helperText={errors["countryOfWork"]?.message}
+            >
+              <MenuItem value={"Spain"}>Spain</MenuItem>
+              <MenuItem value={"Ghana"}>Ghana</MenuItem>
+              <MenuItem value={"Brazil"}>Brazil</MenuItem>
+            </TextField>
+          )}
+        />
 
-        {formValues && formValues["countryOfWork"] === "Spain" && (
+        {watchCountryOfWork === "Spain" && (
           <>
             <div>
               <TextField
@@ -179,14 +185,13 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             <div>
               <MaritalStatus
                 data-testid="marital-status-select-spain"
-                name={"maritalStatus"}
-                control={control}
+                register={register}
                 errors={errors}
               />
             </div>
           </>
         )}
-        {formValues && formValues["countryOfWork"] === "Ghana" && (
+        {watchCountryOfWork === "Ghana" && (
           <>
             <div>
               <TextField
@@ -202,14 +207,13 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             <div>
               <MaritalStatus
                 data-testid="marital-status-select"
-                name={"maritalStatus"}
-                control={control}
+                register={register}
                 errors={errors}
               />
             </div>
           </>
         )}
-        {formValues && formValues["countryOfWork"] === "Brazil" && (
+        {watchCountryOfWork === "Brazil" && (
           <>
             <div>
               <TextField

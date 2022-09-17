@@ -29,6 +29,7 @@ export const baseSchema = yup
       .required("Allowance days field is required"),
     countryOfWork: yup
       .string()
+      .typeError("Country of work field is required")
       .required("Country of work field is required")
       .matches(/^[A-Za-z]+$/i, "Only letters allowed"),
   })
@@ -38,7 +39,9 @@ export const validationSchema = {
   Spain: baseSchema.concat(
     yup
       .object({
-        maritalStatus: yup.string().required(),
+        maritalStatus: yup
+          .string()
+          .required("Marital status field is required"),
         socialInsuranceNumber: yup
           .number()
           .typeError("Social insurance number field must be a number")
