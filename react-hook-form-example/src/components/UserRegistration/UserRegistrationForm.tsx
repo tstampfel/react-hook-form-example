@@ -28,7 +28,6 @@ export interface IUserInfo {
 const UserRegistrationForm: FunctionComponent<{}> = () => {
   const [schema, setSchema] = useState<any>(baseSchema);
   const [formValues, setFromValues] = useState<any>(null);
-  const [formError, setFormError] = useState(false);
   const [fromSubmitted, setFormSubmitted] = useState(false);
 
   const [holidayAllowanceRule, setHolidayAllowanceRule] = useState<{
@@ -49,15 +48,6 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
     mode: "all",
     resolver: yupResolver(schema),
   });
-
-  useEffect(() => {
-    console.log(errors);
-    if (Object.keys(errors).length > 0) {
-      setFormError(true);
-    } else {
-      setFormError(false);
-    }
-  }, [errors]);
 
   // Used to watch changes in a from and set right holliday allowance limits.
   useEffect(() => {
@@ -90,7 +80,6 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
 
   const resetForm = () => {
     setFormSubmitted(false);
-    //setValue("maritalStatus", null);
     reset();
   };
 
@@ -122,7 +111,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             label="First name"
             {...register("firstName")}
             type="text"
-            error={errors["firstName"]?.type === "required"}
+            error={!!errors["firstName"]?.message}
             helperText={errors["firstName"]?.message}
           />
         </div>
@@ -132,7 +121,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             label="Last name"
             {...register("lastName")}
             type="text"
-            error={errors["lastName"]?.type === "required"}
+            error={!!errors["lastName"]?.message}
             helperText={errors["lastName"]?.message}
           />
         </div>
@@ -143,7 +132,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             label="Date of birth"
             InputLabelProps={{ shrink: true }}
             {...register("dateOfBirth")}
-            error={errors["dateOfBirth"]?.type === "required"}
+            error={!!errors["dateOfBirth"]?.message}
             helperText={errors["dateOfBirth"]?.message}
           />
         </div>
@@ -156,7 +145,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
             InputLabelProps={{ shrink: true }}
             InputProps={{ inputProps: { ...holidayAllowanceRule } }}
             {...register("allowanceDays")}
-            error={errors["allowanceDays"]?.type === "required"}
+            error={!!errors["allowanceDays"]?.message}
             helperText={errors["allowanceDays"]?.message}
           />
         </div>
@@ -166,7 +155,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
           label="Country of work"
           select
           {...register("countryOfWork")}
-          error={errors["countryOfWork"]?.type === "required"}
+          error={!!errors["countryOfWork"]?.message}
           helperText={errors["countryOfWork"]?.message}
         >
           <MenuItem value={"Spain"}>Spain</MenuItem>
@@ -183,7 +172,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
                 type="number"
                 {...register("socialInsuranceNumber")}
                 InputProps={{ inputProps: { maxLength: 15 } }}
-                error={errors["socialInsuranceNumber"]?.type === "required"}
+                error={!!errors["socialInsuranceNumber"]?.message}
                 helperText={errors["socialInsuranceNumber"]?.message}
               />
             </div>
@@ -206,7 +195,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
                 type="number"
                 {...register("numberOfChildren")}
                 InputProps={{ inputProps: { min: 0, max: 70 } }}
-                error={errors["numberOfChildren"]?.type === "required"}
+                error={!!errors["numberOfChildren"]?.message}
                 helperText={errors["numberOfChildren"]?.message}
               />
             </div>
@@ -229,7 +218,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
                 type="number"
                 {...register("workingHours")}
                 InputProps={{ inputProps: { min: 0, max: 168 } }}
-                error={errors["workingHours"]?.type === "required"}
+                error={!!errors["workingHours"]?.message}
                 helperText={errors["workingHours"]?.message}
               />
             </div>
@@ -247,7 +236,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
           >
             Reset
           </Button>
-          {formError && (
+          {Object.keys(errors).length > 0 && (
             <Stack sx={{ width: "100%", marginTop: "5vh" }} spacing={2}>
               <Alert severity="error">Not all fields were filled!</Alert>
             </Stack>

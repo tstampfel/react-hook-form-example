@@ -40,7 +40,7 @@ const MaritalStatus: FunctionComponent<MaritalStatusProps> = ({
       data-testid="marital-status-select"
       label="Marital status"
       select
-      error={errors["maritalStatus"]?.type === "required"}
+      error={!!errors["maritalStatus"]?.message}
       helperText={errors["maritalStatus"]?.message}
       onChange={onChange} // send value to hook form
       onBlur={onBlur} // notify when input is touched/blur

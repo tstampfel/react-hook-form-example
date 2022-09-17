@@ -16,10 +16,14 @@ export const baseSchema = yup
       .string()
       .required("Last name field is required")
       .matches(/^[A-Za-z]+$/i, "Only letters allowed"),
-    dateOfBirth: yup.date().required("Date of birth field is required"),
+    dateOfBirth: yup
+      .date()
+      .typeError("Date of birth must be selected")
+      .required("Date of birth field is required"),
     allowanceDays: yup
       .number()
-      .integer("Allowance must field be a number")
+      .typeError("Allowance days field must be a number")
+      .integer("Allowance days field must be a number")
       .positive("Allowance days field must be positive number")
       .moreThan(-1)
       .required("Allowance days field is required"),
