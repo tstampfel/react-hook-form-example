@@ -67,7 +67,7 @@ const UserRegistrationForm: FunctionComponent<{}> = () => {
     }
   }, [watchCountryOfWork]);
 
-  // If rule for allowance changed, we adjust from values here.
+  // If rule for allowance changed, we adjust form values here.
   useEffect(() => {
     setValue("allowanceDays", holidayAllowanceRule.min);
   }, [holidayAllowanceRule, setValue]);
