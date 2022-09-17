@@ -25,7 +25,7 @@ export const baseSchema = yup
       .typeError("Allowance days field must be a number")
       .integer("Allowance days field must be a number")
       .positive("Allowance days field must be positive number")
-      .moreThan(-1)
+      .moreThan(-1, "Allowance days field must be positive number")
       .required("Allowance days field is required"),
     countryOfWork: yup
       .string()
@@ -47,7 +47,7 @@ export const validationSchema = {
           .typeError("Social insurance number field must be a number")
           .integer("Social insurance number field must be a number")
           .positive("Social insurance number field must be positive number")
-          .moreThan(-1)
+          .moreThan(-1, "Social insurance number field must be positive number")
           .required("Social insurance number field is required"),
       })
       .required()
@@ -57,13 +57,14 @@ export const validationSchema = {
       .object({
         maritalStatus: yup
           .string()
+          .typeError("Marital status field is required")
           .required("Marital status field is required"),
         numberOfChildren: yup
           .number()
           .typeError("Number of children field must be a number")
           .integer("Number of children field must be a number")
           .positive("Number of children field must be positive number")
-          .moreThan(-1)
+          .moreThan(-1, "Number of children field must be positive number")
           .required("Number of children field is required"),
       })
       .required()
@@ -77,7 +78,7 @@ export const validationSchema = {
           .typeError("Working hours field must be a number")
           .integer("Working hours field must be a number")
           .positive("Working hours field must be positive number")
-          .moreThan(-1)
+          .moreThan(-1, "Working hours field must be positive number")
           .required("Working hours field is required"),
       })
       .required()
