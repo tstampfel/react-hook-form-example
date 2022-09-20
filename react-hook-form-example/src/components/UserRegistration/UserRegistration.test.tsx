@@ -42,10 +42,10 @@ describe("UserRegistration", () => {
       fireEvent.mouseDown(countryOfWorkSelect);
     });
 
-    const spainOption = screen.getByRole("option", { name: /^spain/i });
+    const option = screen.getByRole("option", { name: /^spain/i });
 
     act(() => {
-      fireEvent.click(spainOption);
+      fireEvent.click(option);
     });
 
     const socialInsuranceInput = await screen.findByTestId(
@@ -76,10 +76,10 @@ describe("UserRegistration", () => {
       fireEvent.mouseDown(countryOfWorkSelect);
     });
 
-    const spainOption = screen.getByRole("option", { name: /^ghana/i });
+    const option = screen.getByRole("option", { name: /^ghana/i });
 
     act(() => {
-      fireEvent.click(spainOption);
+      fireEvent.click(option);
     });
 
     const numberOfChildrenInput = await screen.findByTestId(
@@ -110,10 +110,10 @@ describe("UserRegistration", () => {
     act(() => {
       fireEvent.mouseDown(countryOfWorkSelect);
     });
-    const spainOption = screen.getByRole("option", { name: /^brazil/i });
+    const option = screen.getByRole("option", { name: /^brazil/i });
 
     act(() => {
-      fireEvent.click(spainOption);
+      fireEvent.click(option);
     });
 
     const workingHoursInput = await screen.findByTestId("working-hours-input");
